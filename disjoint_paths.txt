@@ -1,0 +1,24 @@
+# disjoint-paths topology
+# Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
+
+router
+
+#node		x		y
+producer	0		0
+router1		10		10
+router2		20		10
+router3		10		-10
+router4		20		-10
+consumer	30		0
+
+link
+
+#from		to		capacity		metric		delay		queue
+producer	router1		10Mbps			1		1ms		100
+producer	router3		10Mbps			1		1ms		100
+router1         router2         10Mbps                  1               1ms             100
+router3         router4         10Mbps                  1               1ms             100
+router2         consumer        10Mbps                  1               1ms             100
+router4         consumer        10Mbps                  1               1ms             100
+
+
