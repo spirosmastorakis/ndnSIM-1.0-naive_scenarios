@@ -1,0 +1,29 @@
+# topo-star-complex.txt
+# Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
+
+router
+
+#node		x		y
+producer1	0		0
+router1		-10		0
+router2		10		0
+router3		0		-10
+router4		0		10
+consumer1	-20		0
+consumer2	20		0
+consumer3	0		-20
+consumer4	0		20
+
+link
+
+#from		to		capacity		metric		delay		queue
+producer1	router1		10Mbps			1		1ms		100
+producer1	router2		10Mbps			1		1ms		100
+producer1       router3         10Mbps                  1               1ms             100
+producer1       router4         10Mbps                  1               1ms             100
+router1         consumer1       10Mbps                  1               1ms             100
+router2         consumer2       10Mbps                  1               1ms             100
+router3         consumer3       10Mbps                  1               1ms             100
+router4         consumer4       10Mbps                  1               1ms             100
+
+
