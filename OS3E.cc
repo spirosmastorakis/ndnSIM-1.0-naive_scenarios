@@ -2,7 +2,7 @@
 
 /*
 
-Running NDN over Internet2/OS3E!
+Enabling NDN across Internet2/OS3E!
 
 TODO: Implement custom apps for consumers and producers
  
