@@ -1,5 +1,6 @@
 //custom-producer.cc
 
+//Statistics are kept
 //Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
 #include <vector>
