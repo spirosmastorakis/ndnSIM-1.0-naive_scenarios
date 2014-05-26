@@ -4,7 +4,7 @@
 
 Enabling NDN across Internet2/OS3E!
 
-Custom app was implemented for producers. Statistics are kept.
+Custom app was implemented for producers
 TODO: Implement custom app for consumers
  
 Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
