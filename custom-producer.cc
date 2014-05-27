@@ -5,7 +5,7 @@
 
 #include <boost/functional/hash.hpp>
 #include <vector>
-#include "custom-app.h"
+#include "custom-producer.h"
 #include "ns3/ptr.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -29,7 +29,7 @@ namespace ns3 {
 NS_OBJECT_ENSURE_REGISTERED (CustomApp);
 
 //Simple statistics array
-int *stats, counter;
+int *stats, counter=0;
 std::vector<std::string> names;
 
 //NS-3 type
@@ -100,11 +100,11 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
 	names.push_back (name);
 	stats [ 0 ]++;
 	//std::cout << names.at(0) << " vs " << name << " " << stats[0] << "\n";
+	counter++;
   }
   else {
 
   //Non-empty vector
-  	int i=0;
   	for (int i=0; i< int(names.size ()); i++){
 		if (name == names.at (i)) {
 			stats [ i ]++;
@@ -115,8 +115,9 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
   	}
   	if (!found) {  
    		names.push_back (name);
-  		stats [ i+1 ]++;	
-		//std::cout << names.at(i+1) << " vs " << name << " " << stats[i+1] << "\n";
+  		stats [ counter ]++;	
+		//std::cout << names.at(counter) << " vs " << name << " " << stats[counter] << "\n";
+		counter++;
   	}
   }
 
