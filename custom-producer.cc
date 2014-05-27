@@ -1,8 +1,6 @@
-//custom-producer.cc
+// custom-app.cc
 
-//Statistics are kept
-//Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
-
+#include <boost/functional/hash.hpp>
 #include <vector>
 #include "custom-app.h"
 #include "ns3/ptr.h"
@@ -88,6 +86,11 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
   Ptr<Node> producer = GetNode();
   std::string name = Names::FindName (producer);
   bool found = false;
+  Time freshness = Seconds(1.0);  
+
+  //hashing producer node name for signature
+  //TODO: generate hash using SignatureSha256WithRsa algorithm of CCNx
+  boost::hash<std::string> hash;
 
   //Emptry vector   
   if (names.empty ()) {
@@ -109,9 +112,15 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
   }
 
   NS_LOG_DEBUG ("Received Interest packet for " << interest->GetName ());
-
+  
+  //Preparing data packet
   Ptr<ndn::Data> data = Create<ndn::Data> (Create<Packet> (Payload));
-  data->SetName (Create<ndn::Name> (interest->GetName ())); 
+  data->SetName (Create<ndn::Name> (interest->GetName ()));
+  data->SetFreshness (freshness); 
+  data->SetTimestamp (Simulator::Now ());
+  //generate hash   
+  std::size_t signature = hash(name); 
+  data->SetSignature (signature);
 
   NS_LOG_DEBUG ("Sending Data packet for " << data->GetName ());  
 
