@@ -1,4 +1,4 @@
-// custom-app.cc
+// custom-producer.cc
 
 #include <boost/functional/hash.hpp>
 #include <vector>
