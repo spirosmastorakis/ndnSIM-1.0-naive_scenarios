@@ -1,6 +1,6 @@
 //custom-producer.cc
 
-//Statistics are kept
+//Statistics for incoming interests are kept
 //Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
 #include <boost/functional/hash.hpp>
@@ -99,19 +99,25 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
   if (names.empty ()) {
 	names.push_back (name);
 	stats [ 0 ]++;
+	//std::cout << names.at(0) << " vs " << name << " " << stats[0] << "\n";
   }
+  else {
 
   //Non-empty vector
-  for (int i=0; i< int(names.size ()); i++){
-	if (name == names.at (i)) {
-		stats [ i ]++;
-		found = true; 
-		break;
-	}
-  }
-  if (!found) {  
-   	names.push_back (name);
-  	stats [ counter ]++;		
+  	int i=0;
+  	for (int i=0; i< int(names.size ()); i++){
+		if (name == names.at (i)) {
+			stats [ i ]++;
+			found = true; 
+			//std::cout << names.at(i) << " vs " << name << " " << stats[i] << "\n";
+			break;
+		}
+  	}
+  	if (!found) {  
+   		names.push_back (name);
+  		stats [ i+1 ]++;	
+		//std::cout << names.at(i+1) << " vs " << name << " " << stats[i+1] << "\n";
+  	}
   }
 
   NS_LOG_DEBUG ("Received Interest packet for " << interest->GetName ());
