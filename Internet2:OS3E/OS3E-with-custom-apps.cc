@@ -32,8 +32,8 @@ int main (int argc, char *argv[]){
   AnnotatedTopologyReader topologyReader ("", 10);
   topologyReader.SetFileName ("/ndnSIM/ns-3/src/ndnSIM/examples/OS3E.txt");
   topologyReader.Read ();
-  NodeContainer topo = topologyReader.GetNodes();
-
+  NodeContainer topo = topologyReader.GetNodes(); 
+  
   //CCNx stack on all nodes
   ndn::StackHelper ccnxHelper;
   ccnxHelper.SetForwardingStrategy ("ns3::ndn::fw::BestRoute");
@@ -55,16 +55,17 @@ int main (int argc, char *argv[]){
   }
   
   //define simulation time
-  Time sim_time = Seconds(5.0);
+  Time sim_time = Seconds(10.0);
   int random_producer=0;
   srand (time (NULL));
-  //Unique prefixes for each consumer
+  //Prefixes for each consumer
   for (int i = 0; i < int(topo.GetN ()); i++)
     { 
       ndn::AppHelper consumerHelper ("CustomConsumer"); 
       consumerHelper.SetAttribute ("Frequency", StringValue ("5")); 
-      //Each consumer will express random data /producer[random]/<seq-no>
+      //Each consumer will express random data /producer[random]/<random-num>
       random_producer = rand() % topo.GetN ();
+      //consumerHelper.SetAttribute("Nodes", ObjectVectorValue (topo));
       consumerHelper.SetPrefix ("/"+ Names::FindName(producers[random_producer])); 
       consumerHelper.Install (consumers[i]);
     }
