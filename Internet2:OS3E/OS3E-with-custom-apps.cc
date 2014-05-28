@@ -4,9 +4,9 @@
 
 Enabling NDN across Internet2/OS3E!
 
-Custom app was implemented for producers
-TODO: Implement custom app for consumers
- 
+Custom apps were implemented for producers and consumers
+TODO: Enhance app for consumers
+
 Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
 */
@@ -22,14 +22,6 @@ Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 #include "ns3/ndnSIM-module.h"
 
 using namespace ns3;
-
-void register_prefix (int this_producer, Ptr<Node> producers[ ], ndn::GlobalRoutingHelper Helper, NodeContainer topology){
-  //Register prefixes with global routing controller
-  for (int i=0; i< int(topology.GetN ()); i++) {
-	if (producers[i] != producers[this_producer])
-  		Helper.AddOrigins ("/" + Names::FindName(producers[i]), producers[this_producer]); 
-  }	
-}
 
 int main (int argc, char *argv[]){
 
@@ -63,29 +55,29 @@ int main (int argc, char *argv[]){
   }
   
   //define simulation time
-  Time sim_time = Seconds(2.0);
+  Time sim_time = Seconds(5.0);
   int random_producer=0;
   srand (time (NULL));
   //Unique prefixes for each consumer
   for (int i = 0; i < int(topo.GetN ()); i++)
     { 
-      ndn::AppHelper consumerHelper ("ns3::ndn::ConsumerCbr");
+      ndn::AppHelper consumerHelper ("CustomConsumer"); 
       consumerHelper.SetAttribute ("Frequency", StringValue ("5")); 
       //Each consumer will express random data /producer[random]/<seq-no>
       random_producer = rand() % topo.GetN ();
-      consumerHelper.SetPrefix ("/"+ Names::FindName(producers[random_producer]));
+      consumerHelper.SetPrefix ("/"+ Names::FindName(producers[random_producer])); 
       consumerHelper.Install (consumers[i]);
     }
 
   for (int i = 0; i < int(topo.GetN ()); i++)
     {
-      ndn::AppHelper producerHelper ("CustomApp");
+      ndn::AppHelper producerHelper ("CustomProducer");
       producerHelper.SetAttribute ("DataSize", StringValue ("1024"));
       std::stringstream parameter;
       parameter << int(topo.GetN());
       producerHelper.SetAttribute ("Node number", StringValue (parameter.str ()));
-      producerHelper.SetAttribute ("Sim time", TimeValue (sim_time)); 
-      register_prefix(i, producers, ccnxGlobalRoutingHelper, topo); 
+      producerHelper.SetAttribute ("Sim time", TimeValue (sim_time));  
+      ccnxGlobalRoutingHelper.AddOrigins ("/" + Names::FindName(producers[i]), producers[i]); 
       producerHelper.SetPrefix ("/" + Names::FindName(producers[i]));
       producerHelper.Install (producers[i]);
     }
@@ -103,3 +95,4 @@ int main (int argc, char *argv[]){
 
   return 0;
 }
+
