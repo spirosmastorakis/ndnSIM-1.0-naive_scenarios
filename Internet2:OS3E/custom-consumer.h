@@ -28,7 +28,7 @@ private:
   double frequency;
 
   void 
-  SendInterest (/*Ptr<ndn::Pit> pit, Ptr<ndn::fib::Entry> fibEntry*/);
+  SendInterest ();
 
 };
 
