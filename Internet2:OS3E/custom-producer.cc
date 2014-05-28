@@ -18,15 +18,14 @@
 #include "ns3/ndn-data.h"
 
 #include "ns3/core-module.h"
-#include "ns3/ndn-pit.h"
 #include "ns3/ndn-fib.h"
 #include "ns3/random-variable.h"
 
-NS_LOG_COMPONENT_DEFINE ("CustomApp");
+NS_LOG_COMPONENT_DEFINE ("CustomProducer");
 
 namespace ns3 {
 
-NS_OBJECT_ENSURE_REGISTERED (CustomApp);
+NS_OBJECT_ENSURE_REGISTERED (CustomProducer);
 
 //Simple statistics array
 int *stats, counter=0;
@@ -34,21 +33,21 @@ std::vector<std::string> names;
 
 //NS-3 type
 TypeId
-CustomApp::GetTypeId ()
+CustomProducer::GetTypeId ()
 {
-  static TypeId tid = TypeId ("CustomApp")
+  static TypeId tid = TypeId ("CustomProducer")
     .SetParent<ndn::App> ()
-    .AddConstructor<CustomApp> ()
-    .AddAttribute ("Prefix", "Data Prefix", StringValue ("/"), ndn::MakeNameAccessor (&CustomApp::prefix), ndn::MakeNameChecker ())
-    .AddAttribute ("DataSize", "Payload Size", UintegerValue (1024), MakeUintegerAccessor (&CustomApp::Payload), MakeUintegerChecker <uint32_t> ())
-    .AddAttribute ("Node number", "Number of Topology Nodes", UintegerValue (1024), MakeUintegerAccessor (&CustomApp::Num_nodes), MakeUintegerChecker <uint32_t> ())
-    .AddAttribute ("Sim time", "Simulation time", TimeValue (Seconds(0)), MakeTimeAccessor (&CustomApp::sim_time), MakeTimeChecker ());
+    .AddConstructor<CustomProducer> ()
+    .AddAttribute ("Prefix", "Data Prefix", StringValue ("/"), ndn::MakeNameAccessor (&CustomProducer::prefix), ndn::MakeNameChecker ())
+    .AddAttribute ("DataSize", "Payload Size", UintegerValue (1024), MakeUintegerAccessor (&CustomProducer::Payload), MakeUintegerChecker <uint32_t> ())
+    .AddAttribute ("Node number", "Number of Topology Nodes", UintegerValue (1024), MakeUintegerAccessor (&CustomProducer::Num_nodes), MakeUintegerChecker <uint32_t> ())
+    .AddAttribute ("Sim time", "Simulation time", TimeValue (Seconds(0)), MakeTimeAccessor (&CustomProducer::sim_time), MakeTimeChecker ());
   return tid;
 }
 
 //Start of the application
 void
-CustomApp::StartApplication ()
+CustomProducer::StartApplication ()
 {
   //ndn::App
   ndn::App::StartApplication ();
@@ -61,15 +60,16 @@ CustomApp::StartApplication ()
   names.clear();
   //Add entry to FIB
   Ptr<ndn::fib::Entry> fibEntry = fib->Add (prefix, m_face, 0);
-  
+  //Make face green
+  fibEntry->UpdateStatus (m_face, ndn::fib::FaceMetric::NDN_FIB_GREEN);
   //Print statistics right before the end of simulation
-  Simulator::Schedule (sim_time-Seconds(0.05), &CustomApp::StopApplication, this);
+  Simulator::Schedule (sim_time-Seconds(0.05), &CustomProducer::StopApplication, this);
  
 }
 
 //Application is stopped
 void
-CustomApp::StopApplication ()
+CustomProducer::StopApplication ()
 {
   //results are printed only once
   if (GetNode()->GetId() == 0) {
@@ -83,8 +83,8 @@ CustomApp::StopApplication ()
 
 //Interest arrives
 void
-CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
-{
+CustomProducer::OnInterest (Ptr<const ndn::Interest> interest)
+{ 
   ndn::App::OnInterest (interest);
   Ptr<Node> producer = GetNode();
   std::string name = Names::FindName (producer);
@@ -109,7 +109,7 @@ CustomApp::OnInterest (Ptr<const ndn::Interest> interest)
 		if (name == names.at (i)) {
 			stats [ i ]++;
 			found = true; 
-			//std::cout << names.at(i) << " vs " << name << " " << stats[i] << "\n";
+			std::cout << names.at(i) << " vs " << name << " " << stats[i] << "\n";
 			break;
 		}
   	}
