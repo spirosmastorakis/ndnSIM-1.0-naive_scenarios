@@ -1,9 +1,7 @@
 //custom-producer.h
 
-//Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
-
-#ifndef CUSTOM_APP_H_
-#define CUSTOM_APP_H_
+#ifndef CUSTOM_PRO_H_
+#define CUSTOM_PRO_H_
 
 #include "ns3/ndn-name.h"
 #include "ns3/ndn-app.h"
@@ -11,7 +9,7 @@
 
 namespace ns3 {
 
-class CustomApp : public ndn::App
+class CustomProducer : public ndn::App
 {
 public:  
   //Register NS-3 type "CustomApp"
@@ -39,4 +37,4 @@ private:
 
 } // namespace ns3
 
-#endif // CUSTOM_APP_H_
+#endif // CUSTOM_PRO_H_
