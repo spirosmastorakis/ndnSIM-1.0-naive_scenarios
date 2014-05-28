@@ -1,6 +1,6 @@
 //custom-producer.cc
 
-//Statistics for incoming interests are kept
+//Statistics for OnInterest events are kept
 //Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
 #include <boost/functional/hash.hpp>
@@ -74,7 +74,7 @@ CustomProducer::StopApplication ()
   //results are printed only once
   if (GetNode()->GetId() == 0) {
   	for (int i=0; i< int(names.size ()); i++) 
-  		std::cout << "Node " << names.at(i) << " received " << stats [ i ] << " interests\n";
+  		std::cout << "At node " << names.at(i) << " occurred " << stats [ i ] << " OnInterest events\n";
   }
 	
   //Cleanup ndn::App
@@ -109,7 +109,7 @@ CustomProducer::OnInterest (Ptr<const ndn::Interest> interest)
 		if (name == names.at (i)) {
 			stats [ i ]++;
 			found = true; 
-			std::cout << names.at(i) << " vs " << name << " " << stats[i] << "\n";
+			//std::cout << names.at(i) << " vs " << name << " " << stats[i] << "\n";
 			break;
 		}
   	}
