@@ -1,5 +1,7 @@
 //custom-consumer.h
 
+//Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
+
 #ifndef CUSTOM_CONS_H_
 #define CUSTOM_CONS_H_
 

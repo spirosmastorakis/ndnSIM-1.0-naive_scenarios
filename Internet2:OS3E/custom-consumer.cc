@@ -1,5 +1,7 @@
 //custom-consumer.cc
 
+//Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
+
 #include <set>
 #include "custom-consumer.h"
 #include "ns3/ptr.h"
