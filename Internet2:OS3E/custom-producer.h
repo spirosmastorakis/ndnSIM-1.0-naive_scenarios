@@ -1,5 +1,7 @@
 //custom-producer.h
 
+//Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
+
 #ifndef CUSTOM_PRO_H_
 #define CUSTOM_PRO_H_
 
