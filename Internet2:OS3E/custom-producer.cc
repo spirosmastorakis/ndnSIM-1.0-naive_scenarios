@@ -1,6 +1,6 @@
 //custom-producer.cc
 
-//Statistics for OnInterest events are kept
+//Statistics regarding OnInterest events are kept
 //Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
 #include <boost/functional/hash.hpp>
@@ -63,7 +63,7 @@ CustomProducer::StartApplication ()
   //Make face green
   fibEntry->UpdateStatus (m_face, ndn::fib::FaceMetric::NDN_FIB_GREEN);
   //Print statistics right before the end of simulation
-  Simulator::Schedule (sim_time-Seconds(0.05), &CustomProducer::StopApplication, this);
+  Simulator::Schedule (sim_time-Seconds(0.0002), &CustomProducer::StopApplication, this);
  
 }
 
@@ -91,8 +91,7 @@ CustomProducer::OnInterest (Ptr<const ndn::Interest> interest)
   bool found = false;
   Time freshness = Seconds(1.0);  
 
-  //hashing producer node name for signature
-  //TODO: generate hash using SignatureSha256WithRsa algorithm of CCNx
+  //hashing producer node name for signature 
   boost::hash<std::string> hash;
 
   //Emptry vector   
