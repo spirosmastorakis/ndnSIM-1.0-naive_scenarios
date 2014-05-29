@@ -5,7 +5,7 @@
 Enabling NDN across Internet2/OS3E!
 
 Custom apps were implemented for producers and consumers
-TODO: Enhance app for consumers
+TODO: Implement retransmission policy for consumer app 
 
 Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
@@ -55,13 +55,13 @@ int main (int argc, char *argv[]){
   }
   
   //define simulation time
-  Time sim_time = Seconds(10.0);
+  Time sim_time = Seconds(5.0);
   int random_producer=0;
   srand (time (NULL));
   //Prefixes for each consumer
   for (int i = 0; i < int(topo.GetN ()); i++)
     { 
-      ndn::AppHelper consumerHelper ("CustomConsumer"); 
+      ndn::AppHelper consumerHelper ("CustomConsumer");
       consumerHelper.SetAttribute ("Frequency", StringValue ("5")); 
       //Each consumer will express random data /producer[random]/<random-num>
       random_producer = rand() % topo.GetN ();
