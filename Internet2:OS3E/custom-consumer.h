@@ -5,6 +5,7 @@
 #ifndef CUSTOM_CONS_H_
 #define CUSTOM_CONS_H_
 
+#include "ns3/random-variable.h"
 #include "ns3/ndn-app.h"
 #include "ns3/ndn-pit.h"
 
@@ -28,6 +29,11 @@ public:
 private:
   ndn::Name prefix;
   double frequency;
+  RandomVariable *random_var; 
+  EventId sendEvent;
+
+  void
+  SchedulePacket ();
 
   void 
   SendInterest ();

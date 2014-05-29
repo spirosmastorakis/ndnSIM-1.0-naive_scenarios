@@ -29,7 +29,7 @@ CustomConsumer::GetTypeId ()
     .SetParent<ndn::App> ()
     .AddConstructor<CustomConsumer> ()
     .AddAttribute ("Prefix", "data prefix", StringValue ("/"),MakeNameAccessor (&CustomConsumer::prefix),ndn::MakeNameChecker ())
-    .AddAttribute ("Frequency", "Frequency of interest packets", StringValue ("1.0"),MakeDoubleAccessor (&CustomConsumer::frequency), MakeDoubleChecker<double> ()); 
+    .AddAttribute ("Frequency", "Frequency of interest packets", StringValue ("1.0"),MakeDoubleAccessor (&CustomConsumer::frequency), MakeDoubleChecker<double> ());  
   return tid;
 }
 
@@ -39,16 +39,26 @@ CustomConsumer::StartApplication ()
 {
   //ndn::App
   ndn::App::StartApplication (); 
-  //TODO: Implement interest sending policy
-  Simulator::Schedule (Seconds (1.0), &CustomConsumer::SendInterest, this);
-  Simulator::Schedule (Seconds (8.0), &CustomConsumer::SendInterest, this);
+  //Interest sending policy based on lognormal distribution
+  random_var = new LogNormalVariable (1.0 / frequency, 2 * 1.0 / frequency);
+  CustomConsumer::SchedulePacket (); 
 }
+
 //Application is stopped
 void
 CustomConsumer::StopApplication ()
 {
+  //Cancel sendEvent  
+  Simulator::Cancel (sendEvent);  
+
   //Cleanup ndn::App
   ndn::App::StopApplication (); 
+}
+
+void CustomConsumer::SchedulePacket ()
+{
+if (!sendEvent.IsRunning ())
+	sendEvent = Simulator::Schedule(Seconds(random_var->GetValue ()), &CustomConsumer::SendInterest, this);
 }
 
 void
@@ -72,9 +82,10 @@ CustomConsumer::SendInterest ()
   //Call trace
   m_transmittedInterests (interest, this, m_face);
 
-  m_face->ReceiveInterest (interest); 
-}
+  m_face->ReceiveInterest (interest);
 
+  CustomConsumer::SchedulePacket (); 
+}
 
 //Data arrives
 void
@@ -84,4 +95,4 @@ CustomConsumer::OnData (Ptr<const ndn::Data> contentObject)
  
 }
 
-
+}
