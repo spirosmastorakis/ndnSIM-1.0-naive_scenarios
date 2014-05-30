@@ -5,7 +5,6 @@
 Enabling NDN across Internet2/OS3E!
 
 Custom apps were implemented for producers and consumers
-TODO: Implement retransmission policy for consumer app 
 
 Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 
@@ -55,7 +54,7 @@ int main (int argc, char *argv[]){
   }
   
   //define simulation time
-  Time sim_time = Seconds(5.0);
+  Time sim_time = Seconds(20.0);
   int random_producer=0;
   srand (time (NULL));
   //Prefixes for each consumer
