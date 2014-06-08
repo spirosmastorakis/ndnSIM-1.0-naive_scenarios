@@ -15,22 +15,13 @@ Author: Spyridon Mastorakis <spiros[dot]mastorakis[at]gmail[dot]com>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "OS3E.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/ndnSIM-module.h"
 
 using namespace ns3;
 
-void register_prefix (int this_producer, Ptr<Node> producers[ ], ndn::GlobalRoutingHelper Helper, NodeContainer topology){
-  //Register prefixes with global routing controller
-  for (int i=0; i< int(topology.GetN ()); i++) {
-	if (producers[i] != producers[this_producer])
-  		Helper.AddOrigins ("/" + Names::FindName(producers[i]), producers[this_producer]); 
-  }	
-}
-
-int main (int argc, char *argv[]){
+int main (int argc, char *argv[]) {
 
   CommandLine cmd;
   cmd.Parse (argc, argv);
@@ -67,7 +58,7 @@ int main (int argc, char *argv[]){
     {
       ndn::AppHelper consumerHelper ("ns3::ndn::ConsumerCbr");
       consumerHelper.SetAttribute ("Frequency", StringValue ("5"));
-      //Each consumer will express random data /producer[random]/<seq-no>
+      //Each consumer will express random data /producer[random]
       random_producer = rand() % topo.GetN ();
       consumerHelper.SetPrefix ("/"+ Names::FindName(producers[random_producer]));
       consumerHelper.Install (consumers[i]);
@@ -76,9 +67,8 @@ int main (int argc, char *argv[]){
   for (int i = 0; i < int(topo.GetN ()); i++)
     {
       ndn::AppHelper producerHelper ("ns3::ndn::Producer");
-      producerHelper.SetAttribute ("PayloadSize", StringValue ("1024"));
-      register_prefix(i, producers, ccnxGlobalRoutingHelper, topo);
-      //ccnxGlobalRoutingHelper.AddOrigins ("/" + Names::FindName(producers[i]) , producers[i]);
+      producerHelper.SetAttribute ("PayloadSize", StringValue ("1024"));  
+      ccnxGlobalRoutingHelper.AddOrigins ("/" + Names::FindName(producers[i]), producers[i]); 
       producerHelper.SetPrefix ("/" + Names::FindName(producers[i]));
       producerHelper.Install (producers[i]);
     }
@@ -88,12 +78,14 @@ int main (int argc, char *argv[]){
 
   Simulator::Stop (Seconds (10.0));
 
-  ndn::L3AggregateTracer::InstallAll ("aggregate-trace.txt", Seconds (0.5));
-  ndn::L3RateTracer::InstallAll ("rate-trace.txt", Seconds (0.5));
+  //ndn::L3AggregateTracer::InstallAll ("aggregate-trace.txt", Seconds (0.5));
+  //ndn::L3RateTracer::InstallAll ("rate-trace.txt", Seconds (0.5));
   
   Simulator::Run ();
   Simulator::Destroy ();
 
   return 0;
+
 }
+ 
 
